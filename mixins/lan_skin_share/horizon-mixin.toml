@@ -1,0 +1,55 @@
+[mod]
+id = "lan_skin_share"
+version = "0.1.0"
+priority = 100
+
+[compatibility]
+horizon_revision = "9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0"
+
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "lan_skin_share"
+source = "runtime.rs"
+
+[[injection]]
+id = "lan-skin-net-from-client"
+target = "horizon_client::game::native_hooks::Game<'_>::native_net_from_client"
+kind = "HEAD"
+helper = "net_from_client.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "player", ty = "u128", value = "player" },
+  { name = "channel", ty = "&str", value = "channel" },
+  { name = "data", ty = "&[u8]", value = "data" }
+]
+
+[[injection]]
+id = "lan-skin-net-from-server"
+target = "horizon_client::game::native_hooks::Game<'_>::native_net_from_server"
+kind = "HEAD"
+helper = "net_from_server.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "channel", ty = "&str", value = "channel" },
+  { name = "data", ty = "&[u8]", value = "data" }
+]
+
+[[injection]]
+id = "lan-skin-after-remote-update"
+target = "horizon_client::game::remote::Game<'_>::update_remote_skins"
+kind = "RETURN"
+helper = "after_remote_skins.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "result", ty = "()", value = "$value" }
+]
+
+[[injection]]
+id = "lan-skin-server-stopping"
+target = "horizon_client::game::native_hooks::Game<'_>::native_server_stopping"
+kind = "HEAD"
+helper = "server_stopping.rs"
+bindings = [
+  { name = "dedicated", ty = "bool", value = "dedicated" }
+]
