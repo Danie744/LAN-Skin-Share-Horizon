@@ -1,0 +1,23 @@
+LAN Skin Share 0.1.0 — relatório de validação estática
+
+Verificações realizadas:
+- JSON de compatibility.json e horizon-native.json parseia corretamente.
+- TOML de horizon-mixin.toml parseia corretamente.
+- Todos os helpers citados pelo TOML existem.
+- Os caminhos/targets do módulo foram fixados à revisão do Horizon 9f42064c11efe7ef3e5ed2baad7ddc2a3b36eea0.
+- As assinaturas de native_net_from_client, native_net_from_server e native_server_stopping foram comparadas com a fonte da revisão alvo.
+- O canal de rede é horizon:mod_net; payloads usam o limite de 30.000 bytes descrito pela API. A PNG de skin é limitada a 24.000 bytes.
+- O pacote verifica magic bytes PNG, dimensões 64x64, modelo slim/classic e tamanho antes de aceitar dados.
+
+Não realizados:
+- horizon-mixins plan/stage/check.
+- Compilação Rust/Cargo contra o checkout Horizon.
+- Teste in-game de LAN com anfitrião e convidados.
+- Teste real de perfil offline e de conta Microsoft original.
+- Testes de reconexão/saída durante uma sessão.
+
+Limitações conhecidas:
+- Apenas PNG 64x64; 64x32 não é convertido.
+- Não há tratamento explícito para remover a skin de um jogador que sai antes do servidor LAN ser encerrado; a sessão inteira é limpa no encerramento do servidor.
+- Todos os clientes participantes precisam ser Horizon com o mod; clientes vanilla não recebem mod_net.
+- Código nativo não é sandboxed. Instale apenas se confiar no código e na origem do pacote.
